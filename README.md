@@ -17,13 +17,13 @@ The example API specification used by this repository can be seen hosted at [htt
 4. Copy the YAML specification file for your API to the root of your repository.
 
 5. Edit [index.html](index.html) and change the `url` property to reference your local YAML file. 
-    ```
+    ```javascript
         const ui = SwaggerUIBundle({
             url: "swagger.yaml",
         ...
     ```
     Then fix any references to files in the "dist" directory.
-    ```
+    ```html
     ...
     <link rel="stylesheet" type="text/css" href="dist/swagger-ui.css" >
     <link rel="icon" type="image/png" href="dist/favicon-32x32.png" sizes="32x32" />
