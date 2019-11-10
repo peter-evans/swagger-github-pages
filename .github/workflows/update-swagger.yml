@@ -33,8 +33,6 @@ jobs:
           sed -i "s|https://petstore.swagger.io/v2/swagger.json|$SWAGGER_YAML|g" index.html
           sed -i "s|href=\"./|href=\"dist/|g" index.html
           sed -i "s|src=\"./|src=\"dist/|g" index.html
-          # Ignore file mode changes
-          git config core.filemode false
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v1.7.0
         with:
