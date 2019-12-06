@@ -40,6 +40,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update swagger-ui to ${{ steps.swagger-ui.outputs.release_tag }}
+          author-name: github-actions[bot]
+          author-email: 41898282+github-actions[bot]@users.noreply.github.com
+          committer-name: GitHub
+          committer-email: noreply@github.com
           title: Update SwaggerUI to ${{ steps.swagger-ui.outputs.release_tag }}
           body: |
             Updates [swagger-ui][1] to ${{ steps.swagger-ui.outputs.release_tag }}
