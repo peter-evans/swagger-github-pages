@@ -33,6 +33,7 @@ jobs:
           sed -i "s|https://petstore.swagger.io/v2/swagger.json|$SWAGGER_YAML|g" index.html
           sed -i "s|href=\"./|href=\"dist/|g" index.html
           sed -i "s|src=\"./|src=\"dist/|g" index.html
+          sed -i "s|href=\"index|href=\"dist/index|g" index.html
           # Update current release
           echo ${{ steps.swagger-ui.outputs.release_tag }} > swagger-ui.version
       - name: Create Pull Request
