@@ -39,7 +39,7 @@ jobs:
           # Update current release
           echo ${{ steps.swagger-ui.outputs.release_tag }} > swagger-ui.version
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           commit-message: Update swagger-ui to ${{ steps.swagger-ui.outputs.release_tag }}
           title: Update SwaggerUI to ${{ steps.swagger-ui.outputs.release_tag }}
