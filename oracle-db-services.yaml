@@ -63,6 +63,16 @@ paths:
             pattern: ^[^/]+$
           description: implicit
 
+    /v1/getAllServicesRAG:
+    get:
+      description: >
+        Retrieves a comprehensive list of Oracle Database services, including supported deployment options, capabilities, and multicloud-related information across OCI, AWS, Microsoft Azure, and Google Cloud.
+      tags:
+        - Service APIs
+      responses:
+        '200':
+          description: The queried record.
+
   /v1/migrationMethodsAdvisorParams:
       get:
         security:
@@ -372,3 +382,13 @@ paths:
             Options:
               - Y (Yes)
               - N (No)
+
+  /v1/getAllMulticloudDetails:
+    get:
+      description: >
+        Retrieves detailed multicloud information for Oracle Database services, including supported cloud providers, service availability, compliance availability, region availability across AWS, Microsoft Azure, and Google Cloud.
+      tags:
+        - MultiCloud APIs
+      responses:
+        '200':
+          description: The queried record.
