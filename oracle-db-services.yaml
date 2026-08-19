@@ -1,0 +1,394 @@
+openapi: 3.0.2
+info:
+  version: 1.0.2
+  title: "OCI Database Services Module"
+  description: >
+    Provides an evergreen source for all Oracle Database service information.
+    <br/> 
+    <br/> 
+    Developers and PMs utilize these APIs as a single source of truth. Service changes are viewable on [DB Services Explorer Announcements](https://apexadb.oracle.com/ords/r/dbexpert/dbsn/announcements). 
+  contact:
+    name: DB Services Explorer
+    url: https://oracle.com/dbx
+    email: dbexpert_ww_grp@oracle.com
+
+servers:
+  - url: https://apexadb.oracle.com/ords/dbexpert/db-services/
+
+tags:
+  - name: Service APIs
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+paths:
+  /v1/all:
+    get:
+      description: >
+        Key attributes and characteristics for all Oracle Database cloud services, MySQL Database Service with HeatWave, NoSQL Database Cloud Service, OCI Database with PostgreSQL, and IaaS options for Oracle Database.
+        
+      tags:
+        - Service APIs
+      responses:
+        '200':
+          description: The queried record.
+
+  /v1/ids:
+    get:
+      description: >
+        List all available OCI Database Service IDs.
+      tags:
+        - Service APIs
+      responses:
+        '200':
+          description: The queried record.
+
+  /v1/{id}:
+    get:
+      description: >
+        Retrieve detailed information about a single OCI Database Service via an [ID](#/Service%20APIs/get_v1_ids).
+      tags:
+        - Service APIs
+      responses:
+        '200':
+          description: The queried record.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: ^[^/]+$
+          description: implicit
+
+    /v1/getAllServicesRAG:
+    get:
+      description: >
+        Retrieves a comprehensive list of Oracle Database services, including supported deployment options, capabilities, and multicloud-related information across OCI, AWS, Microsoft Azure, and Google Cloud.
+      tags:
+        - Service APIs
+      responses:
+        '200':
+          description: The queried record.
+
+  /v1/migrationMethodsAdvisorParams:
+      get:
+        security:
+        - basicAuth: []
+        servers:
+        - url: https://apexadb.oracle.com/ords/dbexpert/db-services/
+        description: >
+          Returns a structured dictionary of all valid input parameters, values, and their descriptions for use with the Migration Methods Advisor API (/v1/migrationMethodsAdvisor). 
+          <br> <br>
+          Use this endpoint when constructing requests to /v1/migrationMethodsAdvisor to ensure all input values are valid and well understood.
+          <br/><br/>
+          For instructions and more information, please refer to the 
+          [Migration Methods Advisor](https://apexadb.oracle.com/ords/r/dbexpert/migration-methods/home) — see that page for full usage details and context.
+        tags:
+          - Migration APIs
+        responses:
+          '200':
+            description: Valid parameter values
+
+  /v1/migrationMethodsAdvisor:
+    get:
+      security:
+      - basicAuth: []
+      servers:
+        - url: https://apexadb.oracle.com/ords/dbexpert/db-services/
+      description: >
+        Retrieve recommended migration methods for moving your on-premises or cloud Oracle Database to supported Oracle cloud targets, based on your source and target environments.
+        <br><br>
+        <b> The ordering of migration methods in the API reflects recommendation weight (most recommended/match first). <b>
+        <br><br>
+        For valid input values and parameter explanations, refer to the Migration Methods Parameters endpoint (/v1/migrationMethodsAdvisorParams).
+        <br/><br/>
+        For instructions and more information, please refer to the 
+        [Migration Methods Advisor](https://apexadb.oracle.com/ords/r/dbexpert/migration-methods/home) — see that page for full usage details and context.
+      tags:
+        - Migration APIs
+      responses:
+        '200':
+          description: Recommended migration methods for the provided source and target environment.
+      parameters:
+        - name: SOURCE_DB_VERSION
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [11.2.0.4, 12.1.0.2, 12.2.0.1, 18c, 19c, 21c]
+          description: >
+            Source database version.
+        
+        - name: SOURCE_DB_TYPE
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [SE, EE]
+          description: >
+            Source database edition: SE (Standard Edition), EE (Enterprise Edition). If not specified, default is EE.
+
+        - name: TARGET_SERVICE
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - ADBCC
+              - ADBD
+              - ADBDAWS
+              - ADBS
+              - ADBSAZURE
+              - ADBSGCP
+              - BASE
+              - BASEDB_AZURE
+              - BASEDB_GCP
+              - EXACC
+              - EXACS
+              - EXAXS
+              - EXAXS_AZURE
+              - EXAAWS
+              - EXAAZURE
+              - EXAGCP
+          description: >
+            Target database service.
+
+        - name: TARGET_DB_VERSION
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [11.2.0.4, 12.1.0.2, 19c, 26ai]
+          description: >
+            Target database version.
+
+        - name: ENDIANNESS
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [BIG, LITTLE_LINUX, LITTLE_OTHERS]
+          description: >
+            Database endianness of source environment.
+        
+        - name: CDB
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [CDB, NONCDB]
+          description: >
+            Source database architecture (CDB or NONCDB).
+
+        - name: MULTIPLE_PDBS
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [R]
+          description: >
+            Specify if multiple PDBs are required ("R" for required).
+
+        - name: MIGRATION_MODE
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [OFFLINE, ONLINE]
+          description: >
+            Migration mode (offline or online).
+
+        - name: MIGRATION_TYPE
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [LOGICAL, PHYSICAL]
+          description: >
+            Migration type (logical or physical).
+
+  /v1/BYOLAdvisorParams:
+      get:
+        servers:
+        - url: https://apexadb-dev.oracle.com/ords/dbexpert/db-services/
+        description: >
+          Returns a structured dictionary of all valid input parameters, values, and their descriptions for use with the BYOL Advisor API (/v1/BYOLAdvisor). 
+          <br><br>
+          Use this endpoint when constructing requests to /v1/BYOLAdvisor to ensure all input values are valid and well understood.
+          <br/><br/>
+          To access the BYOL Advisor tool:
+          <br/><br/>
+          1. Open [Cloud Tools](https://apexadb.oracle.com/ords/r/dbexpert/dbsn/home).
+          <br/><br/>
+          2. Locate the 'BYOL Advisor' card on the dashboard.
+          <br/><br/>
+          3. Click on the BYOL Advisor card to open the tool.
+          <br/><br/>
+          <b>Instructions and more information for context are available inside the BYOL Advisor tool.</b>
+        tags:
+          - BYOL Advisor APIs (DEV)
+        responses:
+          '200':
+            description: Valid parameter values
+
+  /v1/BYOLAdvisor:
+      get:
+        servers:
+        - url: https://apexadb-dev.oracle.com/ords/dbexpert/db-services/
+        description: >
+          Returns BYOL Advisor recommendations based on provided input values.
+          <br><br>
+          For valid input values and parameter explanations, refer to the BYOL Advisor Parameters endpoint (/v1/BYOLAdvisorParams).
+          <br/><br/>
+          To access the BYOL Advisor tool:
+          <br/><br/>
+          1. Open [Cloud Tools](https://apexadb.oracle.com/ords/r/dbexpert/dbsn/home).
+          <br/><br/>
+          2. Locate the 'BYOL Advisor' card on the dashboard.
+          <br/><br/>
+          3. Click on the BYOL Advisor card to open the tool.
+          <br/><br/>
+          <b>Instructions and more information for context are available inside the BYOL Advisor tool.</b>
+        tags:
+          - BYOL Advisor APIs (DEV)
+        responses:
+          '200':
+            description: BYOL Advisor recommendation.
+        parameters:
+          - name: EDITION_TYPE
+            in: query
+            required: true
+            schema:
+              type: string
+              enum: [EE, SE]
+            description: >
+              Oracle Database Edition.
+              Options:
+                - EE (Enterprise Edition)
+                - SE (Standard Edition)
+
+          - name: PROCESSOR_LICENSES
+            in: query
+            required: false
+            schema:
+              type: integer
+              minimum: 1
+            description: >
+              Number of Processor Licenses.
+
+          - name: NUPS_LICENSES
+            in: query
+            required: false
+            schema:
+              type: integer
+              minimum: 1
+            description: >
+              Number of Named User Plus licenses.
+
+  /v1/cloudUpgradeAdvisorParams:
+      get:
+        servers:
+        - url: https://apexadb-dev.oracle.com/ords/dbexpert/db-services/
+        description: >
+          Returns a structured dictionary of all valid input parameters, values, and their descriptions for use with the Cloud Upgrade Advisor API (/v1/cloudUpgradeAdvisor). 
+          <br><br>
+          Use this endpoint when constructing requests to /v1/cloudUpgradeAdvisor to ensure all input values are valid and well understood.
+          <br/><br/>
+          To access the Cloud Upgrade Advisor tool:
+          <br/><br/>
+          1. Open [Cloud Tools](https://apexadb.oracle.com/ords/r/dbexpert/dbsn/home).
+          <br/><br/>
+          2. Locate the 'Cloud Upgrade Advisor' card on the dashboard.
+          <br/><br/>
+          3. Click on the Cloud Upgrade Advisor card to open the tool.
+          <br/><br/>
+          <b>Instructions and more information for context are available inside the Cloud Upgrade Advisor tool.</b>
+        tags:
+          - Upgrade Advisor APIs (DEV)
+        responses:
+          '200':
+            description: Valid parameter values
+
+  /v1/cloudUpgradeAdvisor:
+    get:
+      servers:
+        - url: https://apexadb-dev.oracle.com/ords/dbexpert/db-services/
+      description: >
+        Receive upgrade recommendations for your Oracle Database when migrating from third-party cloud environments to Oracle Multicloud.
+        <br><br>
+        For valid input values and parameter explanations, refer to the Cloud Upgrade Advisor Parameters endpoint (/v1/cloudUpgradeAdvisorParams).
+        <br/><br/>
+        To access the Cloud Upgrade Advisor tool:
+        <br/><br/>
+        1. Open [Cloud Tools](https://apexadb.oracle.com/ords/r/dbexpert/dbsn/home).
+        <br/><br/>
+        2. Locate the 'Cloud Upgrade Advisor' card on the dashboard.
+        <br/><br/>
+        3. Click on the Cloud Upgrade Advisor card to open the tool.
+        <br/><br/>
+        <b>Instructions and more information for context are available inside the Cloud Upgrade Advisor tool.</b>
+      tags:
+        - Upgrade Advisor APIs (DEV)
+      responses:
+        '200':
+          description: Cloud Upgrade Advisor recommendation.
+      parameters:
+        - name: CURRENT_CLOUD
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [AWS_EC2, AWS_RDS, GCP, AZ]
+          description: >
+            The current cloud provider.
+            Options:
+              - AWS_EC2 (AWS EC2)
+              - AWS_RDS (AWS RDS)
+              - GCP (Google Cloud Platform)
+              - AZ (Microsoft Azure Platform)
+
+        - name: EDITION_TYPE
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [EE, SE]
+          description: >
+            Oracle Database Edition.
+            Options:
+              - EE (Enterprise Edition)
+              - SE (Standard Edition)
+
+        - name: VCPUS
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          description: >
+            Number of vCPUs (Enter an integer value).
+
+        - name: MT_ON_ACE
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [Y, N]
+          description: >
+            Is Multitenant (MT) on Autonomous Cloud Environment (ACE)?
+            Options:
+              - Y (Yes)
+              - N (No)
+
+  /v1/getAllMulticloudDetails:
+    get:
+      description: >
+        Retrieves detailed multicloud information for Oracle Database services, including supported cloud providers, service availability, compliance availability, region availability across AWS, Microsoft Azure, and Google Cloud.
+      tags:
+        - MultiCloud APIs
+      responses:
+        '200':
+          description: The queried record.
