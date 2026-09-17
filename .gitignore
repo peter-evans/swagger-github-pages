@@ -1,0 +1,29 @@
+# --- build output ---
+build/
+out/
+coverage/
+
+# --- dependencies ---
+node_modules/
+
+# --- logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# --- env / secrets ---
+.env
+.env.*
+*.pem
+*.key
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# --- misc ---
+*.swp
